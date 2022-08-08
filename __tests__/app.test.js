@@ -15,7 +15,7 @@ const mockUser = {
 const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? mockUser.password;
   const agent = request.agent(app);
-  const user = await UserService.create({...mockUser, ...userProps });
+  const user = await UserService.create({ ...mockUser, ...userProps });
 
   const { email } = user;
   await (await agent.post('/api/v1/users/sessions')).setEncoding({ email, password });
