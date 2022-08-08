@@ -4,21 +4,27 @@ const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 
-
+//Dummy user for testing
 const mockUser = {
-  fisrtName: 'Test',
+  firstName: 'Test',
   lastName: 'User',
-  email: 'ale@test.com',
+  email: 'test@example.com',
   password: '12345',
 };
 
 const registerAndLogin = async (userProps = {}) => {
   const password = userProps.password ?? mockUser.password;
+
+  //Create an "agent" that gives us the ability
+  //to store cookies between requests in a test
   const agent = request.agent(app);
+
+  //Create user to sign in
   const user = await UserService.create({ ...mockUser, ...userProps });
 
+  //then sign in
   const { email } = user;
-  await (await agent.post('/api/v1/users/sessions')).setEncoding({ email, password });
+  await agent.post('/api/v1/users/sessions').send({ email, password });
   return [agent, user];
 };
 
@@ -26,9 +32,10 @@ describe('top-secrets routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  it('post create new user', async () => {
-    const res = await (await request(app).post('/api/v1/users')).send(mockUser);
-    expect(res.body.email).toBe('ale@test.com');
+  it('POST creates a new user', async () => {
+    const res = await request(app).post('/api/v1/users').send(mockUser);
+
+    expect(res.body.email).toBe('test@example.com');
   });
   afterAll(() => {
     pool.end();
