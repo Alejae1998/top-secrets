@@ -51,6 +51,19 @@ describe('top-secrets routes', () => {
     expect(res.status).toEqual(200);
     expect(res.body.message).toBe('Successfully signed out!');
   });
+  it('Returns a list of secrets for logged in user', async () => {
+    const [agent] = await registerAndLogin();
+    const res = await agent.get('/api/v1/secrets');
+
+    expect(res.body).toEqual([
+      {
+        id: '1',
+        title: 'First Secret',
+        description: 'Shhhh dont tell anyone',
+        created_at: expect.any(String),
+      },
+    ]);
+  });
   afterAll(() => {
     pool.end();
   });

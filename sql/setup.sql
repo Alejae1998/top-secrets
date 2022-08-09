@@ -18,4 +18,4 @@ CREATE TABLE secrets (
 );
 
 INSERT INTO secrets (title, description)
-VALUES ('First Secret', 'Shhh dont tell anyone');
+VALUES ('First Secret', 'Shhhh dont tell anyone');
