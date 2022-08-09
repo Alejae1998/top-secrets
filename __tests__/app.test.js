@@ -54,7 +54,6 @@ describe('top-secrets routes', () => {
   it('Returns a list of secrets for logged in user', async () => {
     const [agent] = await registerAndLogin();
     const res = await agent.get('/api/v1/secrets');
-
     expect(res.body).toEqual([
       {
         id: '1',
